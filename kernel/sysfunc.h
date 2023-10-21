@@ -23,5 +23,9 @@ int sys_unlink(void);
 int sys_wait(void);
 int sys_write(void);
 int sys_uptime(void);
+/* This code is being added by Namrata nag - nxn230019*/
+int sys_getpinfo(void);
+int sys_settickets(void);
+/* End of code added/modified */
 
 #endif // _SYSFUNC_H_

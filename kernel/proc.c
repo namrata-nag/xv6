@@ -19,11 +19,24 @@ extern void forkret(void);
 extern void trapret(void);
 
 static void wakeup1(void *chan);
+unsigned long int next = 1;
 
 void pinit(void)
 {
   initlock(&ptable.lock, "ptable");
 }
+
+/** This code is being added by Namrata nag - nxn230019
+ * generate the random number
+ * Code reference - https://sourceware.org/git/?p=glibc.git;a=blob;f=stdlib/random_r.c;h=fa0e1d3689dca4b171e9894ab504a4d051685f25;hb=HEAD
+ */
+int randomgenerator(int m)
+{ 
+  static long a = 1;
+  a = (((a * 1103515245U + 12345U)) & 0x7fffffff);
+  return ((a % m));
+}
+/* End of code added/modified */
 
 // Look in the process table for an UNUSED proc.
 // If found, change state to EMBRYO and initialize
@@ -45,6 +58,11 @@ allocproc(void)
 found:
   p->state = EMBRYO;
   p->pid = nextpid++;
+/* This code is being added by Namrata nag - nxn230019
+   * by default a process should get 1 ticket
+   * */
+  p->tickets = 1;
+  /* End of code added/modified */
   release(&ptable.lock);
 
   // Allocate kernel stack if possible.
@@ -145,6 +163,11 @@ int fork(void)
   }
   np->sz = proc->sz;
   np->parent = proc;
+  /* This code is being added by Namrata nag - nxn230019
+   *  child process should inherit the tickets of parent process
+   * */
+  np->tickets = proc->tickets;
+  /* End of code added/modified */
   *np->tf = *proc->tf;
 
   // Clear %eax so that fork returns 0 in the child.
@@ -253,46 +276,65 @@ int wait(void)
   }
 }
 
-
+/* This code is being added by Namrata nag - nxn230019*/
 // Per-CPU process scheduler.
 // Each CPU calls scheduler() after setting itself up.
+// Uses lottery scheduling to schedule new process
 // Scheduler never returns.  It loops, doing:
 //  - choose a process to run
 //  - swtch to start running that process
 //  - eventually that process transfers control
 //      via swtch back to the scheduler.
-void scheduler(void)
+void
+scheduler(void)
 {
   struct proc *p;
 
-  for (;;)
-  {
+  for(;;){
     // Enable interrupts on this processor.
     sti();
 
     // Loop over process table looking for process to run.
     acquire(&ptable.lock);
+
+    //Initialize total ticket count 
+    uint totalTickets = 0;
+
+    // add the titckets of all process which can be moved to running state 
+    // i.e sum of tickets of all process where the state is RUNNABLE
     for (p = ptable.proc; p < &ptable.proc[NPROC]; p++)
     {
-      if (p->state != RUNNABLE)
-        continue;
+      if (p->state != RUNNABLE){ continue;}
+      totalTickets = totalTickets + p->tickets;
+    }
 
-      // Switch to chosen process.  It is the process's job
-      // to release ptable.lock and then reacquire it
-      // before jumping back to us.
-      proc = p;
-      switchuvm(p);
-      p->state = RUNNING;
-      swtch(&cpu->scheduler, proc->context);
-      switchkvm();
+    //If total ticket count is more than 1 that means there exists atleast 1 process
+    if(totalTickets > 0){
+      int chosenOne = randomgenerator(totalTickets); // generate the winner using random generator
+      int sum = 0;
+      for (p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+        if (p->state == RUNNABLE){
+          sum = sum + p->tickets;  // sum stores the total count of tickets of the runnable processes till current iteration
 
-      // Process is done running for now.
-      // It should have changed its p->state before coming back.
-      proc = 0;
+          // If sum is greater than the chosenone then switch to that process
+          if (sum > chosenOne){
+            proc = p;
+            switchuvm(p);
+            p->state = RUNNING;
+            p->ticks = p->ticks + 1; // increment tick every time a process gets scheduled
+            swtch(&cpu->scheduler, proc->context);
+            switchkvm();
+            proc =0;
+            break;
+          }
+        }
+      }
     }
     release(&ptable.lock);
+
   }
 }
+/* End of code added/modified */
 
 // Enter scheduler.  Must hold only ptable.lock
 // and have changed proc->state.

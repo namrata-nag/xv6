@@ -23,5 +23,9 @@
 #define SYS_sbrk   19
 #define SYS_sleep  20
 #define SYS_uptime 21
+/* This code is added by Namrata Nag - nxn230019 */
+#define SYS_getpinfo 23
+#define SYS_settickets 24
+/* End of code added/modified */
 
 #endif // _SYSCALL_H_

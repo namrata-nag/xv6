@@ -44,50 +44,92 @@ void seginit(void)
   proc = 0;
 }
 
-//print the entry of page table and page directory
-void ptprint(pde_t *pgdir)
-{
+// //print the details of the page table of the first process
+// void ptprint(pde_t *pgdir){
+//   uint i, j;
+//   pde_t *pde;
+//   pte_t *pgtab;
+//   pde_t *pte;
+//   pte_t *pgtab2;
 
-  uint i, j;
-  pde_t *pde;
-  pte_t *pgtab;
-  pde_t *pte;
-  pte_t *frame;
 
-  //print the address of the pgdir
-  cprintf("pgdir %p\n", &pgdir);
+//   //print the address of the pgdir
+//  // pde_t *pgd = (pte_t *)PTE_ADDR(*pgdir);
 
-  /**
-   * Each page table has max NPDENTRIES which 1024
-  */
-  for (i = 0; i < NPDENTRIES; i++)
-  {
+//  cprintf("pgdir 0x%p \n", pgdir);
 
-    pde = &pgdir[i];  // entry inside each page directory
-    pgtab = (pte_t *)(PTE_ADDR(*pde)); // convert the page directory entry to physical address of page table
+//   /**
+//    * Each page table has max NPDENTRIES which 1024
+//   */
+//   for(i =0; i <NPDENTRIES; i++){
+//   pde = &pgdir[i]; // entry inside each page directory
 
-    //check if preset bit is there
-    if (pde & PTE_P)
-    {
-      // check if the user bit is 1
-      if (pde & PTE_U)
-      {
-        cprintf("..%d: pde 0x%p pa 0x%p", i, pde, pgtab);
-        for (j = 0; j < NPDENTRIES; j++)
-        {
-          pte = &pgtab[i]; //point to each page table entry
-          frame = (pte_t *)(PTE_ADDR(*pte)); // convert the page table entry to physical address
-          if (pte & PTE_P)
-          {
-            if (pte & PTE_U)
-            {
-              cprintf("..%d: pde 0x%p pa 0x%p", j, pte, frame);
-            }
-          }
-        }
-      }
-    }
-  }
+//   //check if preset bit is there
+//   if(*pde & PTE_P){
+
+//     // check if the user bit is 1
+//     if(*pde & PTE_U){
+//        pgtab = (pte_t *)PTE_ADDR(*pde);  // convert the page directory entry to physical address of page table
+//        cprintf("..%d: pde 0x%p pa 0x%p\n",i, pgdir[i], pgtab);
+//        for(j=0; j< NPDENTRIES; j++){
+//        pte = &pgtab[j]; //point to each page table entry
+//        if(*pte & PTE_P){
+//           if(*pte & PTE_U)
+//           {
+//            pgtab2 = (pte_t *)PTE_ADDR(*pte); // convert the page table entry to physical address
+//            cprintf(".. ..%d: pte 0x%p pa 0x%p\n",j, pgtab[j], pgtab2);
+//           }
+//         }
+//         }
+//       }
+//    }
+//    }
+// }
+
+// //print the entry of page table and page directory
+// void ptprint(pde_t *pgdir)
+// {
+
+//   uint i, j;
+//   pde_t *pde;
+//   pte_t *pgtab;
+//   pde_t *pte;
+//   pte_t *frame;
+
+//   //print the address of the pgdir
+//   cprintf("pgdir %p\n", &pgdir);
+
+//   /**
+//    * Each page table has max NPDENTRIES which 1024
+//   */
+//   for (i = 0; i < NPDENTRIES; i++)
+//   {
+
+//     pde = &pgdir[i];  // entry inside each page directory
+//     pgtab = (pte_t *)(PTE_ADDR(*pde)); // convert the page directory entry to physical address of page table
+
+//     //check if preset bit is there
+//     if (pde & PTE_P)
+//     {
+//       // check if the user bit is 1
+//       if (pde & PTE_U)
+//       {
+//         cprintf("..%d: pde 0x%p pa 0x%p", i, pde, pgtab);
+//         for (j = 0; j < NPDENTRIES; j++)
+//         {
+//           pte = &pgtab[i]; //point to each page table entry
+//           frame = (pte_t *)(PTE_ADDR(*pte)); // convert the page table entry to physical address
+//           if (pte & PTE_P)
+//           {
+//             if (pte & PTE_U)
+//             {
+//               cprintf("..%d: pde 0x%p pa 0x%p", j, pte, frame);
+//             }
+//           }
+//         }
+//       }
+//     }
+//   }
 }
 
 // Return the address of the PTE in page table pgdir

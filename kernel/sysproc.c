@@ -6,6 +6,37 @@
 #include "proc.h"
 #include "sysfunc.h"
 
+/* This code is being added by Namrata nag - nxn230019 
+ * Set custom ticket value to the process
+ * takes integer value as input
+ * return 0 if ticket set successfully
+ * return -1 if invalid input or any error occured
+ * */
+int sys_settickets(void){
+  int n;
+
+  // Fetch  integer input
+  if (argint(0, &n) < 0)
+  {
+    return -1;
+  }
+
+  // Input should not be 0 or less than 0 
+  if(n <= 0){
+     return -1;
+  }
+
+  // If proc->tickets available assign the custom ticket
+  if (proc->tickets)
+  {
+    proc->tickets = n;
+    return 0;
+  }
+  return -1;
+}
+/* End of code added/modified */
+
+
 int
 sys_fork(void)
 {

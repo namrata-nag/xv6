@@ -2,6 +2,7 @@
 #define _USER_H_
 
 struct stat;
+struct pstat;
 
 // system calls
 int fork(void);
@@ -25,6 +26,10 @@ int getpid(void);
 char* sbrk(int);
 int sleep(int);
 int uptime(void);
+/* This code is being added by Namrata nag - nxn230019*/
+int getpinfo(struct pstat*); // system call to save current running process statistics
+int settickets(int); // system call to set custom ticket in the process
+/* End of code added/modified */
 
 // user library functions (ulib.c)
 int stat(char*, struct stat*);

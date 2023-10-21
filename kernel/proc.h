@@ -74,7 +74,10 @@ struct proc {
   struct file *ofile[NOFILE];  // Open files
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
-  uint tickets;                 // assign ticket to the procceess
+/* This code is being added by Namrata nag - nxn230019*/
+  uint tickets;                // assign ticket to the procceess
+  uint ticks;                  // number of time process has been scheduled
+  /* End of code added/modified */
 };
 
 // Process memory is laid out contiguously, low addresses first:

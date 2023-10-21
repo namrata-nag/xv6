@@ -9,6 +9,8 @@
 #include "fcntl.h"
 #include "sysfunc.h"
 
+static uint readCount = 0;
+
 // Fetch the nth word-sized system call argument as a file descriptor
 // and return both the descriptor and the corresponding struct file.
 static int
@@ -44,7 +46,6 @@ fdalloc(struct file *f)
   return -1;
 }
 
-
 int
 sys_dup(void)
 {
@@ -68,6 +69,7 @@ sys_read(void)
 
   if(argfd(0, 0, &f) < 0 || argint(2, &n) < 0 || argptr(1, &p, n) < 0)
     return -1;
+  incrementReadCount();
   return fileread(f, p, n);
 }
 

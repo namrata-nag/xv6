@@ -28,6 +28,7 @@ KERNEL_OBJECTS := \
 	uart.o\
 	vectors.o\
 	vm.o\
+	pstat.o\ #This code is being added by Namrata nag - nxn230019
 
 KERNEL_OBJECTS := $(addprefix kernel/, $(KERNEL_OBJECTS))
 

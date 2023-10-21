@@ -29,3 +29,8 @@ SYSCALL(getpid)
 SYSCALL(sbrk)
 SYSCALL(sleep)
 SYSCALL(uptime)
+/* This code is being added by Namrata nag - nxn230019*/
+SYSCALL(getpinfo)
+SYSCALL(settickets)
+/* End of code added/modified */
+
