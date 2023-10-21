@@ -1,14 +1,10 @@
 
 # user programs
-# See below for how  test programs readcount1, readdcount2, readcount3 are included to the build
 USER_PROGS := \
 	cat\
 	echo\
 	forktest\
 	grep\
-	readcount1\
-	readcount2\
-	readcount3\
 	init\
 	kill\
 	ln\
