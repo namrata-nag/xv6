@@ -1,4 +1,4 @@
-Project 2: Add Lottery Scheduler to xv6
+# Project 2: Add Lottery Scheduler to xv6
 
 
 Read the project description below carefully several times. Also, watch this video. (You
@@ -21,7 +21,7 @@ The objectives for this project:
 • To make a graph to show your project behaves appropriately.
 
 
-*Setting Tickets*
+## Setting Tickets
 
 You need to implement a new system call to set the number of tickets. The prototype of
 the system call is:
@@ -33,7 +33,7 @@ should return 0 if successful, and -1 otherwise (if, for example, the caller pas
 number less than one).
 
 
-*Implementing Scheduler*
+## Implementing Scheduler
 
 Most of the code for the scheduler can be found in proc.c; the associated header
 file, proc.h is also quite useful to examine. (It is also very useful to read (relevant parts
@@ -49,7 +49,7 @@ searching should lead you to a simple pseudo-random number generator, which you
 can then include in the kernel and use as appropriate.
 
 
-*Getting Process Statistics*
+## Getting Process Statistics
 
 You need to implement a second system call to gather some statistics about all the
 running process. The prototype for the second system call is
@@ -64,6 +64,7 @@ You need to understand how to fill in the structure pstat in the kernel and pass
 results to user space. The structure should look like what you see below, in a file
 called pstat.h. You have to include this file in appropriate .c files.
 
+```
 #ifndef _PSTAT_H_
 #define _PSTAT_H_
 #include "param.h"
@@ -74,6 +75,7 @@ struct pstat {
  int ticks[NPROC]; // the number of ticks each process has accumulated
 };
 #endif // _PSTAT_H_
+```
 
 
 Good examples of how to pass arguments into the kernel are found in existing system
@@ -84,7 +86,7 @@ space -- they are a security threat(!), and thus must be checked very carefully 
 usage.
 
 
-*Graph*
+## Graph
 
 Beyond the usual code, you will have to make a graph for this assignment. The graph
 should show the number of time slices a set of three processes receives over time,
